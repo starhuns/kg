@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from typing import List
 
 from app.schemas.user import ChapterRelationCreate, ChapterRelationResponse
-from app.services.user_service import create_chapter_relation, get_chapter_relations
+from app.services.user_service import create_chapter_relation, get_graph_relations
 
 router = APIRouter(
     prefix="/chapters",
@@ -21,4 +21,4 @@ def list_chapter_relations():
     """
     查询所有章节关系
     """
-    return get_chapter_relations()
+    return get_graph_relations()
