@@ -11,14 +11,14 @@ class ChapterRelationCreate(BaseModel):
 
 # 定义关系查询响应模型
 class ChapterRelationResponse(BaseModel):
-    start_id: str
+    # start_id: str
     start_labels: List[str]
     start_properties: Dict
 
     relation: str
-    relation_properties: Dict
-
-    end_id: str
+    # relation_properties: Dict
+    #
+    # end_id: str
     end_labels: List[str]
     end_properties: Dict
 

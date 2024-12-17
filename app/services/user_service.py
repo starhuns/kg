@@ -54,14 +54,11 @@ def get_graph_relations():
     query = """
     MATCH (start)-[r]->(end)
     RETURN 
-        start.id AS start_id, 
-        labels(start) AS start_labels, 
         properties(start) AS start_properties, 
+        labels(start) AS start_labels,
         TYPE(r) AS relation, 
-        properties(r) AS relation_properties, 
-        end.id AS end_id, 
-        labels(end) AS end_labels, 
-        properties(end) AS end_properties
+        properties(end) AS end_properties,
+        labels(end) AS end_labels
     """
     with neo4j_conn.get_session() as session:
         result = session.run(query)
@@ -70,17 +67,23 @@ def get_graph_relations():
         responses = []
         for record in records:
             response = ChapterRelationResponse(
-                start_id=record["start_id"],
+                # start_id=record["start_id"],
                 start_labels=record["start_labels"],
                 start_properties=record["start_properties"],
-
                 relation=record["relation"],
-                relation_properties=record["relation_properties"],
-
-                end_id=record["end_id"],
+                # relation_properties=record["relation_properties"],
+                #
+                # end_id=record["end_id"],
                 end_labels=record["end_labels"],
                 end_properties=record["end_properties"]
             )
             responses.append(response)
 
         return responses
+
+
+# start.id AS start_id,
+# ,
+#  properties(r) AS relation_properties,
+#         end.id AS end_id,
+#         labels(end) AS end_labels,
