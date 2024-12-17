@@ -27,23 +27,7 @@ def create_chapter_relation(relation_data: ChapterRelationCreate):
             "relation": record["relation"],
             "end_chapter": record["end_chapter"],
         }
-def process_relation_data(raw_data):
-    """
-    将原始数据处理为符合 ChapterRelationResponse 的格式
-    """
-    processed_data = {
-        "start_chapter": raw_data["start_properties"]["name"],  # 提取起始章节的名称
-        "start_labels": raw_data["start_labels"],
-        "start_properties": raw_data["start_properties"],
 
-        "relation": raw_data["relation"],
-        "relation_properties": raw_data["relation_properties"],
-
-        "end_chapter": raw_data["end_properties"]["name"],  # 提取终止章节的名称
-        "end_labels": raw_data["end_labels"],
-        "end_properties": raw_data["end_properties"],
-    }
-    return ChapterRelationResponse(**processed_data)
 
 
 def get_graph_relations():
