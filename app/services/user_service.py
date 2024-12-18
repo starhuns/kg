@@ -1,3 +1,6 @@
+import logging
+from typing import List
+
 from app.database import neo4j_conn
 from app.schemas.user import ChapterRelationCreate, ChapterRelationResponse
 
@@ -66,8 +69,40 @@ def get_graph_relations():
         return responses
 
 
-# start.id AS start_id,
-# ,
-#  properties(r) AS relation_properties,
-#         end.id AS end_id,
-#         labels(end) AS end_labels,
+def search_chapters(search_term: str) -> List[ChapterRelationResponse]:
+    """
+    根据搜索关键字模糊查询章节及其相关章节
+    :param search_term: 搜索关键字
+    :return: 列表，每一项为 ChapterRelationResponse 对象
+    """
+    # 使用参数化查询以防止Cypher注入
+    query = """
+    MATCH (start)-[r]->(end)
+    WHERE toLower(start.name) CONTAINS toLower($search_term)
+    RETURN 
+        properties(start) AS start_properties,
+        labels(start) AS start_labels,
+        TYPE(r) AS relation, 
+        properties(end) AS end_properties,
+        labels(end) AS end_labels
+    """
+    try:
+        with neo4j_conn.get_session() as session:
+            result = session.run(query, parameters={"search_term": search_term})
+            records = result.data()
+
+            responses = [
+                ChapterRelationResponse(
+                    start_labels=record.get("start_labels", []),
+                    start_properties=record.get("start_properties", {}),
+                    relation=record.get("relation", ""),
+                    end_labels=record.get("end_labels", []),
+                    end_properties=record.get("end_properties", {}),
+                )
+                for record in records
+            ]
+
+            return responses
+    except Exception as e:
+        logging.error(f"Error during search_chapters: {e}")
+        return []
